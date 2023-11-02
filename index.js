@@ -30,11 +30,23 @@ app.post('/deductBalance', validateDeductBalance, async (req, res) => {
     await service.deductBalance(userId, amount);
     res.json(true);
   } catch(e) {
-    console.log('catched')
     res.status(400);
     res.send(e.message)
   }
 })
+
+app.post('/setBalance', validateDeductBalance, async (req, res) => {
+  const userId = req.body.userID;
+  const amount = req.body.amount;
+  try{
+    await service.setBalance(userId, amount);
+    res.json(true);
+  } catch(e) {
+    res.status(400);
+    res.send(e.message)
+  }
+})
+
 
 app.listen(port, async () => {
   try {

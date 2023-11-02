@@ -17,10 +17,29 @@ async function deductBalance(userID, amount) {
       }
 
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error('CONSTRAINT VIOLATION');
     }
+}
+
+async function setBalance(userID, amount) {
+  try {
+    const [numberOfUpdatedRows] = await User.update(
+      { balance: amount },
+      {
+        where: { id: userID },
+      }
+    );
+
+    if (numberOfUpdatedRows === 0) {
+      throw new Error('User not found');
+    }
+
+  } catch (error) {
+    throw new Error(error.message);
   }
+}
 
 module.exports = {
     deductBalance,
+    setBalance
 }
