@@ -4,7 +4,7 @@
 
 Как запустить:
 
-  a) nmp install
+  a) npm install
   
   b) sudo docker-compose up -d
   
