@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('postgres://user:password@localhost:5432/dbname') // Example for postgres
-const {User} = require('./models');
-
+const { User } = require('./models');
 
 async function deductBalance(userID, amount) {
     try {
@@ -39,7 +38,8 @@ async function setBalance(userID, amount) {
   }
 }
 
+
 module.exports = {
     deductBalance,
-    setBalance
+    setBalance,
 }

@@ -1,9 +1,14 @@
 const express = require('express');
 const Sequelize = require('sequelize');
 const app = express()
-const port = 3000
-const service = require('./service')
+const port = process.env.PORT || 3000;
 const sequelize = new Sequelize('postgres://user:password@localhost:5432/dbname')
+
+const userService = require('./service')
+const taskService = require('./tasks/service')
+const cronJobs = require('./tasks/cron');
+const taskConsumer = require('./tasks/taskConsumer')
+
 app.use(express.json());
 
 const validateDeductBalance = (req, res, next) => {
@@ -27,7 +32,7 @@ app.post('/deductBalance', validateDeductBalance, async (req, res) => {
   const userId = req.body.userID;
   const amount = req.body.amount;
   try{
-    await service.deductBalance(userId, amount);
+    await userService.deductBalance(userId, amount);
     res.json(true);
   } catch(e) {
     res.status(400);
@@ -39,8 +44,18 @@ app.post('/setBalance', validateDeductBalance, async (req, res) => {
   const userId = req.body.userID;
   const amount = req.body.amount;
   try{
-    await service.setBalance(userId, amount);
+    await userService.setBalance(userId, amount);
     res.json(true);
+  } catch(e) {
+    res.status(400);
+    res.send(e.message)
+  }
+})
+
+app.get('/tasks', async (req, res) => {
+  try{
+    const tasks = await taskService.getTasksStatus()
+    res.send(tasks);
   } catch(e) {
     res.status(400);
     res.send(e.message)
